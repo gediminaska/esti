@@ -70,12 +70,15 @@
             @if (Route::has('login'))
                 <div class="top-right links">
                     @auth
-                        {{menu('app')}}
+                        @if(Voyager::can('browse_estimates'))
+                        <a href="{{ route('estimates.index') }}">My estimates</a>
+                        @endif
+                            <a href="{{ route('estimate-requests.index') }}">{{ Voyager::can('browse_all_estimate_requests') ? 'All' : 'My'}} estimate requests</a>
 
                         <a class="navbar-item" href="{{ route('logout') }}"
                            onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();">
-                            Logout
+                            Logout ({{Auth::user()->name}})
                         </a>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                             {{ csrf_field() }}

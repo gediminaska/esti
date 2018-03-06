@@ -5,10 +5,10 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Estimate extends Model
+class EstimateRequest extends Model
 {
-    public function estimateRequest() {
-        return $this->belongsTo('App\EstimateRequest');
+    public function estimates() {
+        return $this->hasMany('App\Estimate');
     }
 
     public function user() {
