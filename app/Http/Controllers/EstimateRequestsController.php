@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\EstimateRequest;
 use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Facades\Voyager;
+use App\Image;
+
 
 class EstimateRequestsController extends Controller
 {
@@ -47,11 +49,19 @@ class EstimateRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        $estimateRequest = new EstimateRequest;
-        $estimateRequest->user_id = Auth::user()->id;
-        $estimateRequest->title = $request->title;
-        $estimateRequest->description = $request->description;
-        $estimateRequest->save();
+        $estimateRequest = EstimateRequest::create([
+            'user_id' => Auth::user()->id,
+            'title' => $request->title,
+            'description' => $request->description,
+        ]);
+
+        foreach ($request->photos as $photo) {
+            $filename = $photo->store('public');
+            Image::create([
+                'estimate_request_id' => $estimateRequest->id,
+                'name' => $filename,
+            ]);
+        }
         return redirect()->route('estimate-requests.index');
     }
 
